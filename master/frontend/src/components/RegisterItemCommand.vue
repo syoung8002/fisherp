@@ -1,4 +1,5 @@
 <template>
+
     <v-card outlined>
         <v-card-title>
             RegisterItem
@@ -10,7 +11,7 @@
         <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn
-                    color="primary"
+                    color="deep-purple lighten-2"
                     text
                     @click="registerItem"
             >
@@ -18,7 +19,7 @@
             </v-btn>
             
             <v-btn
-                    color="primary"
+                    color="deep-purple lighten-2"
                     text
                     @click="close"
             >

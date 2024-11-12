@@ -1,5 +1,5 @@
 <template>
-    <div style="margin: 0 -15px 0 -15px;">
+    <div style="margin: -7px -15px 0 -15px;">
         <v-card-title v-if="editMode">
             {{label}}
         </v-card-title>
@@ -23,14 +23,14 @@
             <v-card
                 v-if="!editMode"
                 class="mx-auto"
-                height="230"
+                style="height: 245px;"
                 width="400"
             >
                 <v-img
                     height="100%"
                     :src="weatherBg"
                 >
-                    <div v-if="!editMode" style="font-size:70px; margin:50px 0 50px 20px;">
+                    <div v-if="!editMode" style="font-size:70px; margin:25px 0 50px 20px;">
                         <div v-if="value.precipitation<25">
                             <span style="color:gold" class="mdi mdi-white-balance-sunny"></span>
                         </div>
@@ -42,11 +42,11 @@
                         </div>
                     </div>
 
-                    <div v-if="!editMode" style="font-size:25px; font-weight:500; margin-left:20px; color:white;">
-                            온도 {{value.degree }}&nbsp;<v-icon x-large color="secondary">mdi-temperature-celsius</v-icon>&nbsp;&nbsp;
-                            풍속 {{value.wind }}km/h&nbsp;<v-icon x-large color="secondary">mdi-weather-windy-variant</v-icon><br>
-                            강수확률 {{value.precipitation }}%&nbsp;<v-icon x-large color="secondary">mdi-umbrella</v-icon>&nbsp;&nbsp;
-                            습도 {{value.humidity }}%&nbsp;<v-icon x-large color="secondary">mdi-weather-rainy</v-icon>
+                    <div v-if="!editMode" style="font-size:25px; font-weight:500; margin-left:20px; color:white; margin-top: -15px;">
+                            온도 {{value.degree }}&nbsp;<v-icon x-large color="white">mdi-temperature-celsius</v-icon>&nbsp;&nbsp;
+                            풍속 {{value.wind }}km/h&nbsp;<v-icon x-large color="white">mdi-weather-windy-variant</v-icon><br>
+                            강수확률 {{value.precipitation }}%&nbsp;<v-icon x-large color="white">mdi-umbrella</v-icon>&nbsp;&nbsp;<br>
+                            습도 {{value.humidity }}%&nbsp;<v-icon x-large color="white">mdi-weather-rainy</v-icon>
                     </div>
                 </v-img>
             </v-card>

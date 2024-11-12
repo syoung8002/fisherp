@@ -1,17 +1,16 @@
 <template>
-    <div style="margin: 0 -15px 0 -15px;">
-        <v-card-title>
-            ItemUnit
-        </v-card-title>
+    <div style="margin: -10px -15px 0 -15px;">
         <v-card-text>
-            <div v-if="editMode" style="margin-top:-20px;">
+            <div class="label-title"></div>
+            <div v-if="editMode">
                 <v-select
-                        v-model="newValue"
-                        :label="'name'"
-                        :items="itemUnitList"
+                    v-model="newValue"
+                    :label="label"
+                    :items="selections"
+                    solo
                 ></v-select>
             </div>
-            <div v-else style="margin-top:-20px;">
+            <div v-else>
                 ItemUnit : {{ value }}
             </div>
         </v-card-text>
@@ -19,24 +18,22 @@
 </template>
 
 <script>
+    import BaseEntity from './base-ui/BaseEntity.vue';
+
     export default {
         name: 'ItemUnit',
+        mixins:[BaseEntity],
         components:{},
         props: {
-            value: [Object, String, Number, Boolean, Array],
-            editMode: Boolean,
-            isNew: Boolean,
-            offline: Boolean,
-            inList: Boolean,
-            label: String,
+            label: String
         },
         data: () => ({
-            itemUnitList : [ "Box",  "Kg", ],
+            selections : ["Box","Kg",],
             newValue: '',
         }),
         async created() {
             if(!this.value) {
-                this.newValue = this.itemUnitList[0];
+                this.newValue = this.itemunitList[0];
             } else {
                 this.newValue = this.value;
             }

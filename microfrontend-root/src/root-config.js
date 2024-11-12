@@ -10,10 +10,10 @@ const routes = constructRoutes(`
   <route default>
     <application name="@my-app/home"></application>
   </route>
-  <route path="masters">
+  <route path="master">
     <application name="@my-app/master"></application>
   </route>
-  <route path="purchases">
+  <route path="purchase">
     <application name="@my-app/purchase"></application>
   </route>
 </single-spa-router>

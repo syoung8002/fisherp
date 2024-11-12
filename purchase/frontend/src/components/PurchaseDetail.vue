@@ -1,86 +1,72 @@
 <template>
 
-    <v-card outlined>
-        <v-card-title>
-            PurchaseDetail
-        </v-card-title>
-
-        <v-card-text>
+    <div>
+        <div class="detail-title">
+        PurchaseDetail
+        </div>
+        <v-col>
             <ItemId offline label="ItemId" v-model="value.itemId" :editMode="editMode" @change="change"/>
             <BigDecimal offline label="UnitPrice" v-model="value.unitPrice" :editMode="editMode" @change="change"/>
             <Number label="Qty" v-model="value.qty" :editMode="editMode"/>
-        </v-card-text>
+        </v-col>
 
         <v-card-actions v-if="inList">
             <slot name="actions"></slot>
         </v-card-actions>
-    </v-card>
+    </div>
 </template>
 
 <script>
+import BaseEntity from './base-ui/BaseEntity'
 
-    export default {
-        name: 'PurchaseDetail',
-        components:{},
-        props: {
-            value: [Object, String, Number, Boolean, Array],
-            editMode: Boolean,
-            isNew: Boolean,
-            offline: Boolean,
-            inList: Boolean,
-            label: String,
+export default {
+    name: 'PurchaseDetail',
+    mixins:[BaseEntity],
+    components:{
+    },
+    data: () => ({
+        path: 'PurchaseDetails',
+    }),
+    props: {
+    },
+    
+    watch: {
+        value(val){
+            this.value = val;
+            this.change();
         },
-        data: () => ({
-        }),
-        async created() {
-            if(!Object.values(this.value)[0]) {
-                this.$emit('input', {});
-                this.newValue = {
-                    'itemId': '',
-                    'unitPrice': '',
-                    'qty': '',
+    },
+    computed:{
+        nameField(){
+            var name = '';
+            if(Object.keys(this.value).length < 3){
+                name = "id"
+            }else{
+                const excludedKeys = ['_links','index'];
+                const filteredKeys = Object.keys(this.value).filter(key => {
+                    const valueType = typeof this.value[key];
+                    return !excludedKeys.includes(key) && key !== 'id' && valueType !== 'object' && valueType !== 'number';
+                });
+                if(filteredKeys == []){
+                    name = "id"
+                }else{
+                    name = filteredKeys[1]; 
                 }
             }
-            if(typeof this.value === 'object') {
-                if(!('qty' in this.value)) {
-                    this.value.qty = 0;
-                }
-            }
-        },
-        watch: {
-            value(val) {
-                this.$emit('input', val);
-            },
-            newValue(val) {
-                this.$emit('input', val);
-            },
-        },
-
-        methods: {
-            edit() {
-                this.editMode = true;
-            },
-            async add() {
-                this.editMode = false;
-                this.$emit('input', this.value);
-
-                if(this.isNew){
-                    this.$emit('add', this.value);
-                } else {
-                    this.$emit('edit', this.value);
-                }
-            },
-            async remove(){
-                this.editMode = false;
-                this.isDeleted = true;
-
-                this.$emit('input', this.value);
-                this.$emit('delete', this.value);
-            },
-            change(){
-                this.$emit('change', this.value);
-            },
+            return name
         }
+    },
+    async created(){
+        if (this.value && this.value.id !== undefined) {
+            this.value = await this.repository.findById(this.value.id)
+        }
+    },
+    methods: {
+        pick(val){
+            this.value = val;
+            this.change();
+        },
     }
+}
 </script>
 

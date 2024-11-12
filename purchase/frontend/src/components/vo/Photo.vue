@@ -1,28 +1,30 @@
 <template>
-    <div style="margin: 0 -15px 0 -15px;">
-        <v-card-title v-if="editMode">
-            {{label}}
-        </v-card-title>
+    <div>
+        <div v-if="editMode" style="margin: 0 -15px 0 -15px;">
+            <v-card-title>
+                {{label}}
+            </v-card-title>
 
-        <v-img
-            :key="photoRender"
-            style="width:400px; height:300px; border-radius:10px; position:relative; margin-left:5px; top:5px;"
-            :style="editMode ? 'cursor:pointer;':''"
-            :src="value.imgFile ? value.imgFile:'https://cdn.vuetifyjs.com/images/cards/cooking.png'"
-            class="mx-auto"
-            @click="selectFile()"
-        ></v-img>
+            <v-img
+                style="width:200px; height:200px; border-radius:10px; position:relative; margin-left:5px; top:5px;"
+                :style="editMode ? 'cursor:pointer;':''"
+                :src="value.imgFile ? value.imgFile:'https://github.com/kibum0405/topping-wijmo/assets/123912988/7dccf9a0-2347-4a51-a367-0f885555b090'"
+                class="mx-auto"
+                @click="selectFile()"
+            ></v-img>
+        </div>
 
-        <v-card-text v-if="value">
-            <div v-if="editMode">
-                <v-text-field label="Purchase" v-model="value.imgName"/>
-                <slot name="actions"></slot>
-            </div>
-        </v-card-text>
+        <div>
+            <v-text-field v-if="editMode" label="Image Name" v-model="value.imgName"/>
+            <span v-else>{{ value.imgName }}</span>
+            <slot name="actions"></slot>
+        </div>
     </div>
 </template>
 
 <script>
+    import Vue from "vue";
+
     export default {
         name:"Photo",
         props: {
@@ -30,9 +32,6 @@
             value : Object,
             label : String, 
         },
-        data: () => ({
-            photoRender:0
-        }),
         created(){
             if(!this.value) {
                 this.value = {
@@ -53,6 +52,9 @@
                 }
 
                 var me = this
+                if(!me.value){
+                    me.value = {}
+                }
                 var input = document.createElement("input");
                 input.type = "file";
                 input.accept = "image/*";
@@ -65,8 +67,7 @@
 
                     reader.onload = function () {
                         var result = reader.result;
-                        me.value.imgFile = result;
-                        me.photoRender++;
+                        Vue.set(me.value, 'imgFile', result);
                     };
                     reader.readAsDataURL( file );
                 };

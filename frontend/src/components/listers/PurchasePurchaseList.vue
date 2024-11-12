@@ -50,6 +50,7 @@
                             
                             
                             
+                            
                         </v-list-item-title>
 
                         <v-list-item-subtitle style="font-size:25px; font-weight:700;">
@@ -63,6 +64,7 @@
                             [ ProductName :  {{data.productName }} ] &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             [ AccountId :  {{data.accountId }} ] &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             [ PurchaseDetails :  {{data.purchaseDetails }} ] &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            [ ItemId :  {{data.itemId }} ] &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                         </v-list-item-subtitle>
 
                     </v-list-item-content>
@@ -132,14 +134,15 @@
             this.newValue = {
                 'purchaseNo': 0,
                 'purchaseType': '',
-                'purchaseDate': '2024-11-06',
-                'warehouseArrivalDate': '2024-11-06',
-                'storageFeePaymentDate': '2024-11-06',
+                'purchaseDate': '2024-11-12',
+                'warehouseArrivalDate': '2024-11-12',
+                'storageFeePaymentDate': '2024-11-12',
                 'storageFeePaymentStatus': false,
                 'mainShipName': '',
                 'productName': '',
                 'accountId': {},
                 'purchaseDetails': [],
+                'itemId': {},
             }
         },
         methods: {

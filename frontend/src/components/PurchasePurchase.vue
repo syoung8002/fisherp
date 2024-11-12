@@ -25,7 +25,10 @@
             <String label="본선명" v-model="value.mainShipName" :editMode="editMode" :inputUI="'TEXT'"/>
             <String label="품명" v-model="value.productName" :editMode="editMode" :inputUI="'TEXT'"/>
             <AccountId offline label="거래처" v-model="value.accountId" :editMode="editMode" @change="change"/>
+            <AccountId offline label="거래처" v-model="value.accountId" :editMode="editMode" @change="change"/>
             <PurchaseDetailManager offline label="PurchaseDetails" v-model="value.purchaseDetails" :editMode="editMode" @change="change"/>
+            <ItemId offline label="ItemId" v-model="value.itemId" :editMode="editMode" @change="change"/>
+            <ItemId offline label="ItemId" v-model="value.itemId" :editMode="editMode" @change="change"/>
         </v-card-text>
 
         <v-card-actions style="background-color: white;">
@@ -100,10 +103,14 @@
 <script>
     const axios = require('axios').default;
 
+    import AccountId from './vo/AccountId.vue';
+    import ItemId from './vo/ItemId.vue';
 
     export default {
         name: 'PurchasePurchase',
         components:{
+            AccountId,
+            ItemId,
         },
         props: {
             value: [Object, String, Number, Boolean, Array],

@@ -76,6 +76,7 @@
                     { text: "productName", value: "productName" },
                     { text: "accountId", value: "accountId" },
                     { text: "purchaseDetails", value: "purchaseDetails" },
+                    { text: "itemId", value: "itemId" },
                 ],
             purchase : [],
             newValue: {},
@@ -95,14 +96,15 @@
             this.newValue = {
                 'purchaseNo': 0,
                 'purchaseType': '',
-                'purchaseDate': '2024-11-06',
-                'warehouseArrivalDate': '2024-11-06',
-                'storageFeePaymentDate': '2024-11-06',
+                'purchaseDate': '2024-11-12',
+                'warehouseArrivalDate': '2024-11-12',
+                'storageFeePaymentDate': '2024-11-12',
                 'storageFeePaymentStatus': false,
                 'mainShipName': '',
                 'productName': '',
                 'accountId': {},
                 'purchaseDetails': [],
+                'itemId': {},
             }
         },
         methods: {

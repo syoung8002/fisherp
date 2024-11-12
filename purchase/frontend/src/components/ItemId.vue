@@ -1,113 +1,64 @@
 <template>
-    <v-card outlined @click="openDialog">
-        <v-card-title>
-            Item : {{ referenceValue ? referenceValue.name : '' }}
-        </v-card-title>
-
-        <v-dialog v-model="pickerDialog">
-            <v-card>
-                <v-card-title>Item</v-card-title>
-                <v-card-text>
-                    <ItemPicker v-model="value" @selected="pick"/>
-                </v-card-text>
-                <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn color="primary" text @click="pickerDialog = false">Close</v-btn>
-                </v-card-actions>
-            </v-card>
-        </v-dialog>
-    </v-card>
+    <div>
+        <BasePicker v-if="editMode" searchApiPath="items" searchParameterName=""  idField="idid" nameField="" path="items" label="ItemId" v-model="value" @selected="pick" :editMode="editMode" />
+        <div v-else style="height:100%">
+            <span>{{ value && value.name ? value.name : '' }}</span>
+        </div>
+    </div>
 
 </template>
 
 <script>
-    const axios = require('axios').default;
+import BaseEntity from './base-ui/BaseEntity'
 
-    export default {
-        name: 'ItemId',
-        components:{},
-        props: {
-            value: [Object, String, Number, Boolean, Array],
-            editMode: Boolean,
-            isNew: Boolean,
-            offline: Boolean,
-            inList: Boolean,
-            label: String,
+export default {
+    name: 'ItemId',
+    mixins:[BaseEntity],
+    components:{
+    },
+    data: () => ({
+        path: 'items',
+    }),
+    props: {
+    },
+    
+    watch: {
+        value(val){
+            this.value = val;
+            this.change();
         },
-        data: () => ({
-            newValue: {},
-            pickerDialog: false,
-            referenceValue: null,
-        }),
-        async created() {
-            if(!Object.values(this.value)[0]) {
-                this.$emit('input', {});
-                this.newValue = {
-                    'id': '',
+    },
+    computed:{
+        nameField(){
+            var name = '';
+            if(Object.keys(this.value).length < 3){
+                name = "id"
+            }else{
+                const excludedKeys = ['_links','index'];
+                const filteredKeys = Object.keys(this.value).filter(key => {
+                    const valueType = typeof this.value[key];
+                    return !excludedKeys.includes(key) && key !== 'id' && valueType !== 'object' && valueType !== 'number';
+                });
+                if(filteredKeys == []){
+                    name = "id"
+                }else{
+                    name = filteredKeys[1]; 
                 }
             }
-            else {
-                this.newValue = this.value;
-                var path = '/items';
-                var temp = await axios.get(axios.fixUrl(path + '/' +  Object.values(this.value)[0]));
-                if(temp.data) {
-                    this.referenceValue = temp.data
-                }
-            }
-        },
-        watch: {
-            value(val) {
-                this.$emit('input', val);
-            },
-            newValue(val) {
-                this.$emit('input', val);
-            },
-        },
-
-        methods: {
-            edit() {
-                this.editMode = true;
-            },
-            async add() {
-                this.editMode = false;
-                this.$emit('input', this.value);
-
-                if(this.isNew){
-                    this.$emit('add', this.value);
-                } else {
-                    this.$emit('edit', this.value);
-                }
-            },
-            async remove(){
-                this.editMode = false;
-                this.isDeleted = true;
-
-                this.$emit('input', this.value);
-                this.$emit('delete', this.value);
-            },
-            change(){
-                this.$emit('change', this.value);
-            },
-            openDialog() {
-                var path = '/items/';
-
-                if(this.editMode) {
-                    this.pickerDialog = true;
-                } else {
-                    this.pickerDialog = false;
-                    this.$router.push(path + this.value.id);
-                }
-            },
-            async pick(val){
-                this.newValue = val;
-                var path = '/items';
-                var temp = await axios.get(axios.fixUrl(path + '/' + val.id));
-                if(temp.data) {
-                    this.referenceValue = temp.data;
-                }
-                this.referenceValue.nameField = val.nameField;
-            },
+            return name
         }
+    },
+    async created(){
+        if (this.value && this.value.id !== undefined) {
+            this.value = await this.repository.findById(this.value.id)
+        }
+    },
+    methods: {
+        pick(val){
+            this.value = val;
+            this.change();
+        },
     }
+}
 </script>
 

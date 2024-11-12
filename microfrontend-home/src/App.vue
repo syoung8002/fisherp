@@ -1,91 +1,64 @@
 <template>
     <v-app>
-        <v-app-bar 
-                app 
-                clipped-left 
+        <v-app-bar
+                app
+                clipped-left
                 flat
+                dark
                 color="primary"
         >
-            <v-toolbar-title>
-                <span class="second-word font uppercase"
-                    style="font-weight:700;"
-                >
-                    <v-app-bar-nav-icon
-                        @click="openSideBar()"
-                        style="z-index:1;
-                        height:56px;
-                        width:30px;
-                        margin-right:10px;
-                        font-weight:300;
-                        font-size:55px;"
-                    >
-                        <div style="line-height:100%;">≡</div>
-                    </v-app-bar-nav-icon>
-                </span>
+            <v-app-bar-nav-icon @click="openSideBar()"></v-app-bar-nav-icon>
+
+            <v-toolbar-title class="font-weight-bold text-uppercase">
+                fisherpwijmo
             </v-toolbar-title>
 
-            <v-btn icon to="/">
-                <v-icon>mdi-home</v-icon>
-            </v-btn>
-            
+            <v-icon class="ml-3" @click="$router.push('/')">
+                mdi-home
+            </v-icon>
+
             <v-spacer></v-spacer>
 
-            <b style="margin-left:10px">{{username}} 님</b>
-            <v-btn
-                text
-                color="white"
-                style="font-size:10px"
-                @click="logout()"
+            <b style="font-size:10px;">{{username}} 님</b>
+
+            <v-btn style="font-size:10px"
+                    text
+                    small
+                    @click="logout()"
             >
                 Logout
             </v-btn>
         </v-app-bar>
 
-        <v-navigation-drawer 
+        <v-navigation-drawer
                 v-model="sideBar"
-                app 
-                clipped 
-                flat 
+                app
+                clipped
+                flat
         >
             <v-list>
-                <v-list-item
-                    class="px-2"
-                    key="accounts"
-                    to="/masters/accounts"
-                    color="primary"
-                    style="font-weight:700;"
+                <v-list-group
+                        v-for="menu in menus"
+                        :key="menu.id"
+                        no-action
                 >
-                    거래처
-                </v-list-item>
-                <v-list-item
-                    class="px-2"
-                    key="items"
-                    to="/masters/items"
-                    color="primary"
-                    style="font-weight:700;"
-                >
-                    품목
-                </v-list-item>
+                    <template v-slot:activator>
+                        <v-list-item-content>
+                            <v-list-item-title>{{ menu.title }}</v-list-item-title>
+                        </v-list-item-content>
+                    </template>
 
-                <v-list-item
-                    class="px-2"
-                    key="purchases"
-                    to="/purchases/purchases"
-                    color="primary"
-                    style="font-weight:700;"
-                >
-                    매입
-                </v-list-item>
-
-                <v-list-item
-                    class="px-2"
-                    key="queryPurchases"
-                    to="queryPurchases"
-                    color="primary"
-                    style="font-weight:700;"
-                >
-                    QueryPurchase
-                </v-list-item>
+                    <v-list-item
+                            v-for="item in menu.items"
+                            :key="item.key"
+                            :to="item.url"
+                            style="margin-left: -40px;"
+                    >
+                        <v-list-item-content>
+                            <v-list-item-title>{{ item.name }}</v-list-item-title>
+                        </v-list-item-content>
+                    </v-list-item>
+                </v-list-group>
             </v-list>
         </v-navigation-drawer>
 
@@ -99,16 +72,42 @@
     export default {
         name: "App",
         data: () => ({
+            username: "",
             sideBar: true,
-            username: '',
+            menus: [
+                {
+                    id: 'master',
+                    title: 'Master',
+                    items: [
+                        {
+                            key: 'accounts',
+                            url: '/master/accounts',
+                            name: '거래처'
+                        },
+                        {
+                            key: 'items',
+                            url: '/master/items',
+                            name: '품목'
+                        },
+                    ]
+                },
+                {
+                    id: 'purchase',
+                    title: 'Purchase',
+                    items: [
+                        {
+                            key: 'purchases',
+                            url: '/purchase/purchases',
+                            name: '매입'
+                        },
+                    ]
+                },
+            ],
         }),
         created() {
-            var me = this
-            me.username = me.$OAuth.idTokenParsed.preferred_username
-
-            if(!me.username){
-                location.reload()
-            }
+            const el = document.createElement('div');
+            el.setAttribute('data-app', true);
+            document.body.appendChild(el);
         },
         methods: {
             openSideBar(){

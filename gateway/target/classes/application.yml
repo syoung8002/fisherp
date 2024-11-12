@@ -7,6 +7,7 @@ spring:
   profiles: default
   cloud:
     gateway:
+#<<< API Gateway / Routes
       routes:
         - id: master
           uri: http://localhost:8082
@@ -15,11 +16,12 @@ spring:
         - id: purchase
           uri: http://localhost:8083
           predicates:
-            - Path=/purchases/**, /queryPurchases/**
+            - Path=/purchases/**, 
         - id: frontend
           uri: http://localhost:8080
           predicates:
             - Path=/**
+#>>> API Gateway / Routes
       globalcors:
         corsConfigurations:
           '[/**]':
@@ -46,7 +48,7 @@ spring:
         - id: purchase
           uri: http://purchase:8080
           predicates:
-            - Path=/purchases/**, /queryPurchases/**
+            - Path=/purchases/**, 
         - id: frontend
           uri: http://frontend:8080
           predicates:

@@ -1,25 +1,27 @@
  /*eslint-disable*/
 import Vue from "vue";
-import singleSpaVue from "single-spa-vue";
-
 import App from "./App.vue";
-import '@babel/polyfill';
 import vuetify from "./plugins/vuetify";
-import router from "./router";
-
 import Managing from "./components";
+import router from "./router";
+import ExcelExportButton from "./components/base-ui/export-btn.vue";
 import Keycloak from 'keycloak-js';
-
 Vue.config.productionTip = false;
-require('./GlobalStyle.css');
+Vue.component("excel-export-button", ExcelExportButton);
+Vue.prototype.$Vue = Vue;
+Vue.prototype.$EventBus = new Vue();
 
+import singleSpaVue from "single-spa-vue";
+ 
 const axios = require("axios").default;
+require('./style.css');
 
 // backend host url
 axios.backend = null; //"http://localhost:8088";
 
 // axios.backendUrl = new URL(axios.backend);
 axios.fixUrl = function(original){
+
   if(!axios.backend && original.indexOf("/")==0) return original;
 
   var url = null;
@@ -50,8 +52,8 @@ templateFiles.keys().forEach(function(tempFiles) {
 Vue.use(Managing);
 const pluralCaseList = []
 
-pluralCaseList.push( {plural: "masters/accounts", pascal: "MasterAccount"} )
-pluralCaseList.push( {plural: "masters/items", pascal: "MasterItem"} )
+pluralCaseList.push( {plural: "accounts", pascal: "Account"} )
+pluralCaseList.push( {plural: "items", pascal: "Item"} )
 
 
 Vue.prototype.$ManagerLists.forEach(function(item, idx) {
@@ -66,15 +68,17 @@ Vue.prototype.$ManagerLists.forEach(function(item, idx) {
   })
 })
 
-
 let initOptions = {
   url: `http://localhost:9090/`,
   realm: `master`,
-  clientId: `master`,
+  clientId: `cliend-name`,
   onLoad: `login-required`,
 };
 
+
 let keycloak = new Keycloak(initOptions);
+let useKeycloak = false;
+let vueLifecycles;
 
 init();
 
@@ -84,31 +88,45 @@ function init() {
   }).then(auth => {
     const ONE_MINUTE = 60000;
   
-    if (!auth) {
-      window.location.reload();
-    } else {
-      console.info(`Auth ok`);
-    }
+      if (!auth) {
+        window.location.reload();
+      } else {
+        console.info(`Auth ok`);
+      }
 
     Vue.prototype.$OAuth = keycloak
 
-    const vueLifecycles = singleSpaVue({
-      Vue,
-      appOptions: {
-        vuetify: vuetify,
+    useKeycloak = true;
+
+    window.setTimeout(refreshToken.bind(null, keycloak), ONE_MINUTE);
+
+  }).catch(() => {
+    console.error(`Auth Fail`);
+  })
+}
+
+if (useKeycloak) {
+  vueLifecycles = singleSpaVue({
+    Vue,
+    appOptions: {
+      vuetify: vuetify,
+        router,
         render: h => h(App, {
           props: {
             OAuth: keycloak,
           },
-        }),
-        router
-      }
-    });
-    
-    window.setTimeout(refreshToken.bind(null, keycloak), ONE_MINUTE);
-  }).catch(() => {
-    console.error(`Auth Fail`);
-  })
+      }),
+    }
+  });
+} else {
+  vueLifecycles = singleSpaVue({
+    Vue,
+    appOptions: {
+      vuetify: vuetify,
+      router,
+      render: h => h(App),
+    }
+  });
 }
 
 function refreshToken() {

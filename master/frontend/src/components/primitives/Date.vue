@@ -12,12 +12,12 @@
             >
                 <template v-slot:activator="{ on, attrs }">
                     <v-text-field
-                            v-model="date"
-                            :label="label"
-                            prepend-icon="mdi-calendar"
-                            readonly
-                            v-bind="attrs"
-                            v-on="on"
+                        v-bind="attrs"
+                        v-model="date"
+                        :label="label"
+                        prepend-icon="mdi-calendar"
+                        readonly
+                        v-on="on"
                     ></v-text-field>
                 </template>
                 <v-date-picker
@@ -26,10 +26,10 @@
                         scrollable
                 >
                     <v-spacer></v-spacer>
-                    <v-btn text color="primary" @click="menu = false">
-                        Cancel
+                    <v-btn text color="primary" @click="resetDate()">
+                        Reset
                     </v-btn>
-                    <v-btn text color="primary" @click="$refs.menu.save(date)">
+                    <v-btn text color="primary" @click="setDate(date)">
                         OK
                     </v-btn>
                 </v-date-picker>
@@ -49,7 +49,6 @@
         props: {
             value: Object,
             editMode: Boolean,
-            label: String
         },
         data: () => ({
             menu: false,
@@ -57,8 +56,16 @@
         }),
         created() {
             if(!this.value) {
+                this.date = null;
                 this.value = this.date;
             }
+        },
+        mounted() {
+            this.$EventBus.$on('changeSelected', (dialog) => {
+                if (!dialog) {
+                    this.date = null;
+                }
+            });
         },
         watch: {
             value() {
@@ -68,6 +75,15 @@
         methods:{
             change(){
                 this.$emit("input", this.value);
+            },
+            resetDate(){
+                this.date = null;
+                this.value = this.date
+                this.setDate(this.value)
+            },
+            setDate(date){
+                this.$refs.menu.save(date)
+                this.$emit("input", date);
             }
         }
     }

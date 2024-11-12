@@ -11,7 +11,7 @@ docker-compose up
 ```
 - Check the Kafka messages:
 ```
-cd kafka
+cd infra
 docker-compose exec -it kafka /bin/bash
 cd /bin
 ./kafka-console-consumer --bootstrap-server localhost:9092 --topic
@@ -38,7 +38,7 @@ mvn spring-boot:run
 ```
 - purchase
 ```
- http :8088/purchases purchaseNo="purchaseNo" purchaseType="purchaseType" purchaseDate="purchaseDate" warehouseArrivalDate="warehouseArrivalDate" storageFeePaymentDate="storageFeePaymentDate" storageFeePaymentStatus="storageFeePaymentStatus" mainShipName="mainShipName" productName="productName" accountId="accountId" purchaseDetails="purchaseDetails" 
+ http :8088/purchases purchaseNo="purchaseNo" purchaseType="purchaseType" purchaseDate="purchaseDate" warehouseArrivalDate="warehouseArrivalDate" storageFeePaymentDate="storageFeePaymentDate" storageFeePaymentStatus="storageFeePaymentStatus" mainShipName="mainShipName" productName="productName" accountId="accountId" purchaseDetails="purchaseDetails" itemId="itemId" 
 ```
 
 

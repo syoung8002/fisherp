@@ -29,12 +29,12 @@ spring:
         event-in:
           group: purchase
 #<<< EDA / Topic Name
-          destination: fisherp
+          destination: fisherpwijmo
 #>>> EDA / Topic Name
           contentType: application/json
         event-out:
 #<<< EDA / Topic Name
-          destination: fisherp
+          destination: fisherpwijmo
 #>>> EDA / Topic Name
           contentType: application/json
 
@@ -79,10 +79,10 @@ spring:
       bindings:
         event-in:
           group: purchase
-          destination: fisherp
+          destination: fisherpwijmo
           contentType: application/json
         event-out:
-          destination: fisherp
+          destination: fisherpwijmo
           contentType: application/json
 
 

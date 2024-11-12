@@ -1,61 +1,32 @@
 <template>
-    <div style="margin: 0 -15px 0 -15px;">
-        <v-card-title  v-if="editMode">
-            {{label}}
-        </v-card-title>
-        <v-card-text v-if="value">
-            <div v-if="editMode" style="margin-top:-20px;">
-                <v-text-field label="Country" v-model="value.country" />
-            </div>
-            <div v-if="editMode" style="margin-top:-20px;">
-                <v-text-field label="State" v-model="value.state" placeholder="OO도"/>
-            </div>
-            <div v-if="editMode" style="margin-top:-20px;">
-                <v-text-field label="City" v-model="value.city"/>
-            </div>
-            <div v-if="editMode" style="margin-top:-20px;">
-                <v-text-field label="Street" v-model="value.street"/>
-            </div>
-            <div v-if="editMode" style="margin-top:-20px;">
-                <v-text-field label="Zipcode" v-model="value.zipcode" />
-            </div>
-
-            <div v-if="!editMode">
-                <p style="font-family:sans-serif; font-weight:bold; font-size:15px">{{value.country }} / {{value.state }} {{value.city }}  {{value.street }} ({{value.zipcode }})</p>
-                <v-divider></v-divider><br>
-                <GmapMap
-                    class="mx-auto"
-                    :center="{lat:latitude, lng:longitude}"
-                    :zoom="10"
-                    map-type-id="terrain"
-                    style="width: 400px; height: 300px"
-                    >
-                    <GmapMarker
-                        :key="index"
-                        v-for="(m, index) in markers"
-                        :position="m.position"
-                        :clickable="true"
-                        :draggable="true"
-                        @click="center=m.position"
-                    />
-                </GmapMap>
-            
-            </div>
-        </v-card-text>
+    <div>
+        <span v-if="!editMode && value.country" style="font-family:sans-serif;">{{value.country + ' /'}} {{value.state }} {{value.city }} {{value.street }} {{'(' + value.zipcode + ')' }}</span>
+        <div v-if="editMode" style="margin: 0 -15px 0 -15px;">
+            <v-card-title>
+                {{label}}
+            </v-card-title>
+            <v-card-text v-if="value">
+                <div style="margin-top:-20px;">
+                    <v-text-field label="Country" v-model="value.country" />
+                </div>
+                <div style="margin-top:-20px;">
+                    <v-text-field label="State" v-model="value.state" placeholder="OO도"/>
+                </div>
+                <div style="margin-top:-20px;">
+                    <v-text-field label="City" v-model="value.city"/>
+                </div>
+                <div style="margin-top:-20px;">
+                    <v-text-field label="Street" v-model="value.street"/>
+                </div>
+                <div style="margin-top:-20px;">
+                    <v-text-field label="Zipcode" v-model="value.zipcode" />
+                </div>
+            </v-card-text>
+        </div>
     </div>
 </template>
 
 <script>
-    import Vue from 'vue'
-    import * as VueGoogleMaps from 'vue2-google-maps'
-
-    Vue.use(VueGoogleMaps, {
-        load: {
-            key: 'AIzaSyC25WBJaWKmod3bV1gX1oAjq7Myu3bIHyY',
-            libraries: 'places', // This is required if you use the Autocomplete plugin
-            region: "KR",
-        },
-    })
 
 
     export default {
@@ -64,10 +35,12 @@
             editMode: Boolean,
             value : Object,
             label : String,
+            inList: Boolean
         },
         data: () => ({
             latitude: 37.5666805,
             longitude: 126.9784147,
+            markers:[]
         }),
         created(){
             if(!this.value) {
